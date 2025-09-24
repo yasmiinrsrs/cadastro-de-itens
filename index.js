@@ -5,8 +5,9 @@ const app = express();
 
 const PORT = 3000;
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const publicDir = path.join(__dirname, './');
+const publicDir = path.join(__dirname, './public');
 
 let pessoas = [
     {
@@ -61,16 +62,8 @@ let pessoas = [
     },
 ];
 
-// ========================================
-// 3. ROTAS DA API (ENDPOINTS)
-// ========================================
-
-// ROTA DE TESTE
-// Método: GET
-// Endpoint: http://localhost:3000/
-// Função: Verificar se a API está funcionando
 app.get("/", (req, res) => {
-    res.sendFile(path.join(publicDir, "itens.html"));
+    res.sendFile(path.join(publicDir, "login.html"));
 });
 
 app.post('/login', (req, res) => {
@@ -97,7 +90,16 @@ app.post('/login', (req, res) => {
             message: "Senha inválida"
         })
     }
-    res.status(200).json({ status: 200, message: "Login com sucesso" })
+    // res.status(200).json({ status: 200, message: "Login com sucesso" })
+    res.redirect('/itens.html')
+})
+
+app.get('/itens.html', (req, res) => {
+    res.sendFile(path.join(publicDir, 'itens.html'));
+});
+
+app.get('/pessoas', (req, res) => {
+    res.status(200).json(pessoas);
 })
 
 app.listen(PORT, () => {
