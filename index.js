@@ -102,6 +102,29 @@ app.get('/pessoas', (req, res) => {
     res.status(200).json(pessoas);
 })
 
+//POST: Criar uma pessoa no array pessoas
+app.post('/pessoas', (req, res) => {
+    const {nome, login, senha } = req.body
+
+    if(!nome || !senha || !login){
+        res.status(400).json('Faltou informação')
+    }
+
+    const pessoaExiste = pessoas.find((p) => p.login === login)
+    if(pessoaExiste){
+        res.status(404).json("Pessoa existe")
+    }
+
+    const novaPessoa = {
+        id: pessoas.length + 1,
+        nome,
+        login,
+        senha,
+    }
+    pessoas.push(novaPessoa)
+    res.status(201).json("Pessoa criada com sucesso!")
+})
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

@@ -26,6 +26,16 @@
       <button onclick="mostrarFormulario()">➕ Adicionar Pessoa</button>
     </div>
 
+    <form>
+      <label>Nome:</label>
+      <input type="text" id="nome" name="nome" required />
+
+      <label>Login:</label>
+      <input type="text" id="login" name="login" required />
+
+      <label>Senha:</label>
+      <input type="password" id="senha" name="senha" required />
+    </form>
 
     <script>
       async function carregarPessoas() {
@@ -39,20 +49,19 @@
         elemento.textContent = "Pessoas carregadas com sucesso!";
 
         const pessoas = await response.json();
-        console.log("\nResponsesss: ", response, "\n pessoas", pessoas);
 
-        const container = document.getElementById("lista");
-        if (pessoas.length === 0) {
-          container.textContent = "Nenhuma pessoa cadastrada.";
-          return;
-        }
-        const ul = document.createElement("ul");
+        const container = document.getElementById("lista")
+        const ul = document.createElement('ul')
 
-        for (let i = 0; i < pessoas.length; i++) {
+        for(let c=0; c<pessoas.length; c++){
+          const pessoa = pessoas[c]
+          const texto = `NOME: ${pessoa.nome}  -- ${pessoa.login}`
+
           const li = document.createElement("li");
-          li.textContent = `${p.nome} — ${p.idade} anos — ${p.cidade} — hobby: ${p.hobby}`;
-          ul.appendChild(li);
+          li.textContent = texto
+          ul.appendChild(li)
         }
+        container.appendChild(ul)
       }
       carregarPessoas();
     </script>
