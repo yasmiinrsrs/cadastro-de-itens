@@ -5,7 +5,11 @@ const app = express();
 
 const PORT = 3000;
 app.use(express.json());
+<<<<<<< HEAD
 app.use(express.urlencoded({ extended: true }))
+=======
+app.use(express.urlencoded({ extended: true }));
+>>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888
 
 const publicDir = path.join(__dirname, './public');
 
@@ -62,6 +66,7 @@ let pessoas = [
     },
 ];
 
+<<<<<<< HEAD
 // ========================================
 // 3. ROTAS DA API (ENDPOINTS)
 // ========================================
@@ -71,6 +76,8 @@ let pessoas = [
 // Método: GET
 // Endpoint: http://localhost:3000/
 // Função: Verificar se a API está funcionando
+=======
+>>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888
 app.get("/", (req, res) => {
     res.sendFile(path.join(publicDir, "login.html"));
 });
@@ -105,10 +112,47 @@ app.post('/login', (req, res) => {
             message: "Senha inválida"
         })
     }
+<<<<<<< HEAD
     // {"status":200,"message":"Login com sucesso"}
     //res.status(200).json({ status: 200, message: "Login com sucesso" })
     res.redirect('/itens.html')
 });
+=======
+    // res.status(200).json({ status: 200, message: "Login com sucesso" })
+    res.redirect('/itens.html')
+})
+
+app.get('/itens.html', (req, res) => {
+    res.sendFile(path.join(publicDir, 'itens.html'));
+});
+
+app.get('/pessoas', (req, res) => {
+    res.status(200).json(pessoas);
+})
+
+//POST: Criar uma pessoa no array pessoas
+app.post('/pessoas', (req, res) => {
+    const {nome, login, senha } = req.body
+
+    if(!nome || !senha || !login){
+        res.status(400).json('Faltou informação')
+    }
+
+    const pessoaExiste = pessoas.find((p) => p.login === login)
+    if(pessoaExiste){
+        res.status(404).json("Pessoa existe")
+    }
+
+    const novaPessoa = {
+        id: pessoas.length + 1,
+        nome,
+        login,
+        senha,
+    }
+    pessoas.push(novaPessoa)
+    res.status(201).json("Pessoa criada com sucesso!")
+})
+>>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888
 
 
 app.get('/pessoas', (req, res) => {
