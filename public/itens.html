@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <style>
+    h1 {
+      color: rgb(0, 0, 0);
+      background-color: #d10000;
+    }
+
+    h3 {
+      color: #000000;
+    }
+
+    h1 {
+      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    h1 {
+      border: 4px solid #000000;
+      padding: 0.5em;
+      margin: 0.5em;
+    }
+
+    h3 {
+      border: 4px solid #000000;
+      padding: 0.5em;
+      margin: 0.5em;
+    }
+
+    button {
+      color: white;
+      background-color: #000000;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>𝑽𝒊𝒔ã𝒐 𝒈𝒆𝒓𝒂𝒍</h1>
+  <h3> 𝑳𝒊𝒔𝒕𝒂𝒈𝒆𝒎 𝒅𝒆 𝒑𝒆𝒔𝒔𝒐𝒂𝒔 ✨📑</h3>
+  <div id="status">carregando...</div>
+  <div id="lista"></div>
+  <button id="botao" onclick="mostrarFormularios()"> + 𝑨𝒅𝒊𝒄𝒊𝒐𝒏𝒂𝒓 𝒑𝒆𝒔𝒔𝒐𝒂𝒔 </button>
+  <form id="formulario" style="display: none;">
+    <label>𝒍𝒐𝒈𝒊𝒏:</label>
+    <input type="text" id="login" name="login" required />
+    <label>𝑺𝒆𝒏𝒉𝒂:</label>
+    <input type="password" id="senha" name="senha" required />
+    <label>𝒏𝒐𝒎𝒆:</label>
+    <input type="text" id="nome" name="nome" required />
+    <button type="submit" onclick="adicionarPessoa(event)">Adicionar pessoa</button>
+  </form>
+
+  <script>
+    async function carregarPessoas() {
+      const response = await fetch("/pessoas");
+      const elemento = document.getElementById('status');
+      if (!response.ok) {
+        elemento.textContent = "Não foi possível carregar as pessoas.";
+        return;
+      }
+      elemento.textContent = "Pessoas carregadas com sucesso!";
+
+      const pessoas = await response.json();
+      const container = document.getElementById("lista");
+      const ul = document.createElement('ul');
+      for (let c = 0; c < pessoas.length; c++) {
+        const pessoa = pessoas[c];
+        const texto = `NOME: ${pessoa.nome} -- ${pessoa.login}`;
+        const li = document.createElement("li");
+        const span = document.createElement("span")
+        span.textContent = texto;
+
+        const botao = document.createElement("button");
+        botao.textContent = "❌";
+        botao.style.marginLeft = "10px";
+        botao.onclick = () => deletarPessoa(pessoa.id, li);
+        li.appendChild(span);
+        li.appendChild(botao);
+        ul.appendChild(li);
+
+      }
+      container.appendChild(ul);
+    }
+
+    carregarPessoas();
+
+    function mostrarFormularios() {
+      const formulario = document.getElementById("formulario");
+      const botao = document.getElementById("botao");
+
+      if (formulario.style.display === "none"){
+      botao.innerText = "ocultar formulário";
+    formulario.style.display = "block";
+      } else{
+        botao.innerText = "Adicionar Pessoas";
+        formulario.style.display = "none";
+      }
+    };
+    function adicionarPessoa(event) {
+      event.preventDefault();  // Corrigido para evitar o comportamento padrão do formulário
+
+      const nome = document.getElementById("nome").value.trim();
+      const login = document.getElementById("login").value.trim();
+      const senha = document.getElementById("senha").value;
+
+      console.log("NOME:  ", nome, "\nLOGIN:  ", login, "\nSENHA:  ", senha);
+      if (!nome || !senha || !login) {
+        alert("TUDO ERRADO!");
+        return;
+      }
+
+      const novaPessoa = { login, nome };
+
+      const container = document.getElementById("lista");
+      let ul = document.querySelector('ul');
+
+      if (!ul) {
+        ul = document.createElement("ul");
+        container.appendChild(ul);
+      }
+
+      const li = document.createElement('li');
+      li.textContent = `nome: ${nome} -- ${login}`;
+      ul.appendChild(li);
+      document.getElementById("formulario").reset();
+      mostrarFormularios();
+    }
+
+    async function deletarPessoa(id, li) {
+      console.log("Deletando pessoa com id = ", id);
+      const response = await fetch(`/pessoas/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        alert("Pessoa deletada com sucesso!");
+        li.remove
+      } else {
+        alert("Erro ao deletar pessoa.");
+      }
+    }
+  </script>
+</body>
+
+</html>

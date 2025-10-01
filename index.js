@@ -5,8 +5,9 @@ const app = express();
 
 const PORT = 3000;
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
-const publicDir = path.join(__dirname, './');
+const publicDir = path.join(__dirname, './public');
 
 let pessoas = [
     {
@@ -44,7 +45,7 @@ let pessoas = [
         nome: 'Yasmin',
         login: 'admin4',
         senha: '123',
-        idade: 13,
+        idade: 14,
         irmaos: true,
         cidade: 'Salvador',
         hobby: 'Ler livros'
@@ -65,16 +66,23 @@ let pessoas = [
 // 3. ROTAS DA API (ENDPOINTS)
 // ========================================
 
+
 // ROTA DE TESTE
 // Método: GET
 // Endpoint: http://localhost:3000/
 // Função: Verificar se a API está funcionando
 app.get("/", (req, res) => {
-    res.sendFile(path.join(publicDir, "itens.html"));
+    res.sendFile(path.join(publicDir, "login.html"));
 });
 
 app.post('/login', (req, res) => {
     const { login, senha } = req.body
+
+    app.get('/itens.html', (req, res) => {
+        res.sendFile(path.join(publicDir, 'itens.html'));
+    })
+
+
 
     //verifica se um dos campos vieram vazios
     if (!login || !senha) {
@@ -97,9 +105,69 @@ app.post('/login', (req, res) => {
             message: "Senha inválida"
         })
     }
-    res.status(200).json({ status: 200, message: "Login com sucesso" })
-})
+    // {"status":200,"message":"Login com sucesso"}
+    //res.status(200).json({ status: 200, message: "Login com sucesso" })
+    res.redirect('/itens.html')
+});
 
+
+app.get('/pessoas', (req, res) => {
+    res.status(200).json(pessoas);
+})
+//Post;
+
+app.post('/pessoas', (req, res) => {
+    const { nome, idade, login, senha, irmaos, cidade, id, hobby } = req.body
+    if (!nome || !idade || !irmaos || !cidade || !hobby) {
+        res.status(400).json("pessoa existe")
+    }
+    const pessoaExiste = pessoas.findIndex((p) => p.login === login)
+    if (pessoaExiste !== -1) {
+        res.status(404).json("pessoa existe")
+    }
+
+    const novaPessoa = {
+        id: pessoas.length + 1,
+        nome,
+        idade,
+        irmaos,
+        cidade,
+        hobby,
+    }
+    pessoas.push(novaPessoa)
+    res.status(201).json("pessoa criada com sucesso!")
+});
+
+app.put("/pessoas/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+  
+    const pessoaIndex = pessoas.findIndex((p) => p.id === id);
+    if (pessoaIndex === -1) {
+      return res.status(404).json({ message: "Pessoa não encontrada" });
+    }
+    const pessoaAtualizada = {
+      id: id,
+      nome: req?.body?.nome,
+      idade: req?.body?.idade,
+      irmaos: req?.body?.irmaos,
+      cidade: req?.body?.cidade,
+      hobby: req?.body?.hobby,
+    };
+    pessoas[pessoaIndex] = pessoaAtualizada;
+    res.json({ message: "Pessoa atualizada com sucesso", pessoaAtualizada });
+  });
+
+  app.delete("/pessoas/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const pessoaIndex = pessoas.findIndex((p) => p.id === id);
+    if (pessoaIndex === -1) {
+      return res.status(404).json({ message: "Pessoa não encontrada" });
+    }
+  
+    pessoas.splice(pessoaIndex, 1);
+    res.json({ message: "Pessoa deletada com sucesso" });
+  });
+  
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
