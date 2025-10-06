@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en">
 
 <head>
@@ -8,43 +7,77 @@
   <title>Home</title>
   <style>
     h1 {
-      color: rgb(0, 0, 0);
-      background-color: #d10000;
-    }
+        color: rgb(146, 2, 2);
+        font-size: 50px;
+        padding: 10px;
+        text-align: center;
+        text-shadow: 7px 7px 5px rgba(0, 0, 0, 0.274);
+        border-bottom: 10px solid rgb(0, 0, 0);
+      }
 
-    h3 {
-      color: #000000;
-    }
+      h3 {
+        color: rgb(0, 0, 0);
+        font-size: 50px;
+        padding: 10px;
+        text-align: center;
+      }
 
-    h1 {
-      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    }
+      form {
+        display: flex;
+        flex-direction: column;
+        width: 600px;
+        margin: 0 auto;
+        background-color: rgba(151, 0, 0, 0.253);
+        color:rgb(139, 8, 8);
+      }
 
-    h3 {
-      font-family: 'Times New Roman', Times, serif;
-    }
+      label {
+        margin-top: 3px;
+        font-weight: bold;
+        color:rgb(133, 10, 10);
+        margin: 0 auto;
+      }
 
-    h1 {
-      border: 4px solid #000000;
-      padding: 0.5em;
-      margin: 0.5em;
-    }
+      input {
+        padding: 8px;
+        margin-top: 20px;
+        border: 2px solid rgb(134, 8, 8);
+        border-radius: 100px;
+        font-size: 20px;
+        margin: 0 auto;
+      }
 
-    h3 {
-      border: 4px solid #000000;
-      padding: 0.5em;
-      margin: 0.5em;
-    }
+      button {
+        margin-top: 40px;
+        padding: 15px;
+        background-color:rgb(173, 0, 0);
+        color: rgb(255, 255, 255);
+        border: 2px solid black;
+        border-radius: 4px;
+        text-shadow: rgb(0, 0, 0);
+        margin: 0 auto;
+      }
 
-    button {
-      color: white;
-      background-color: #000000;
-    }
+      button:hover {
+        background-color: rgb(0, 0, 0);
+      }
+
+      #status {
+        font-size: 20px;
+        color: rgba(173, 0, 0, 0.74);
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      li:hover {
+        background-color: rgba(173, 0, 0, 0.74);
+        color: white;
+      }
   </style>
 </head>
 
 <body>
-  <h1>𝑽𝒊𝒔ã𝒐 𝒈𝒆𝒓𝒂𝒍</h1>
+  <h1>✨🎭 𝑽𝒊𝒔ã𝒐 𝒈𝒆𝒓𝒂𝒍 🎊</h1>
   <h3> 𝑳𝒊𝒔𝒕𝒂𝒈𝒆𝒎 𝒅𝒆 𝒑𝒆𝒔𝒔𝒐𝒂𝒔 ✨📑</h3>
   <div id="status">carregando...</div>
   <div id="lista"></div>
@@ -59,7 +92,15 @@
     <button type="submit" onclick="adicionarPessoa(event)">Adicionar pessoa</button>
   </form>
 
+<!-- div para exibir os detalhes do item selecionado-->
+  <div id="detalhes">
+    <strong> Selecione uma pessoa para ver os detalhes </strong>
+  </div>
+  
+
   <script>
+
+
     async function carregarPessoas() {
       const response = await fetch("/pessoas");
       const elemento = document.getElementById('status');
@@ -78,9 +119,10 @@
         const li = document.createElement("li");
         const span = document.createElement("span")
         span.textContent = texto;
+        span.onclick = () => detalhes(pessoa.id);
 
         const botao = document.createElement("button");
-        botao.textContent = "❌";
+        botao.textContent = "🗑️";
         botao.style.marginLeft = "10px";
         botao.onclick = () => deletarPessoa(pessoa.id, li);
         li.appendChild(span);
@@ -147,77 +189,27 @@
         alert("Erro ao deletar pessoa.");
       }
     }
+
+
+    async function detalhes(id) {
+      const response = await fetch(`/pessoas/${id}`);
+      if (!response.ok) {
+        alert("Erro ao carregar detalhes da pessoa.");
+        return;
+      }
+      const pessoa = await response.json();
+      const detalhes = document.getElementById("detalhes");
+      detalhes.innerHTML = `
+    <h4> detalhes da pessoa selecionada </h4>
+    <p><strong> ID: </strong> ${pessoa.id}</p>
+    <p><strong> NOME: </strong> ${pessoa.nome}</p>
+    <p><strong> LOGIN: </strong> ${pessoa.login}</p>
+    <p><strong> SENHA: </strong> ${pessoa.senha || "(oculta)"}</p>
+    `;
+    }
+
   </script>
-</body>
-
-</html>
-=======
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 30px;
-        background-color: #f9f9f9;
-        color: #333;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Visão Geral</h1>
-    <h3>Listagem de pessoas</h3>
-
-    <div id="status">Carregando...</div>
-    <div id="lista">
-      <!-- Lista de pessoas será inserida aqui -->
-    </div>
-
-    <div>
-      <button onclick="mostrarFormulario()">➕ Adicionar Pessoa</button>
-    </div>
-
-    <form>
-      <label>Nome:</label>
-      <input type="text" id="nome" name="nome" required />
-
-      <label>Login:</label>
-      <input type="text" id="login" name="login" required />
-
-      <label>Senha:</label>
-      <input type="password" id="senha" name="senha" required />
-    </form>
-
-    <script>
-      async function carregarPessoas() {
-        const response = await fetch("/pessoas");
-
-        //Atualizar div com id = "status"
-        const elemento = document.getElementById("status");
-        if (!response.ok) {
-          elemento.textContent = "Não foi possível carregar as pessoas.";
-        }
-        elemento.textContent = "Pessoas carregadas com sucesso!";
-
-        const pessoas = await response.json();
-
-        const container = document.getElementById("lista")
-        const ul = document.createElement('ul')
-
-        for(let c=0; c<pessoas.length; c++){
-          const pessoa = pessoas[c]
-          const texto = `NOME: ${pessoa.nome}  -- ${pessoa.login}`
-
-          const li = document.createElement("li");
-          li.textContent = texto
-          ul.appendChild(li)
-        }
-        container.appendChild(ul)
-      }
-      carregarPessoas();
-    </script>
+ 
   </body>
+
 </html>
->>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888

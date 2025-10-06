@@ -5,11 +5,7 @@ const app = express();
 
 const PORT = 3000;
 app.use(express.json());
-<<<<<<< HEAD
 app.use(express.urlencoded({ extended: true }))
-=======
-app.use(express.urlencoded({ extended: true }));
->>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888
 
 const publicDir = path.join(__dirname, './public');
 
@@ -66,7 +62,6 @@ let pessoas = [
     },
 ];
 
-<<<<<<< HEAD
 // ========================================
 // 3. ROTAS DA API (ENDPOINTS)
 // ========================================
@@ -76,8 +71,6 @@ let pessoas = [
 // Método: GET
 // Endpoint: http://localhost:3000/
 // Função: Verificar se a API está funcionando
-=======
->>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888
 app.get("/", (req, res) => {
     res.sendFile(path.join(publicDir, "login.html"));
 });
@@ -112,15 +105,11 @@ app.post('/login', (req, res) => {
             message: "Senha inválida"
         })
     }
-<<<<<<< HEAD
     // {"status":200,"message":"Login com sucesso"}
     //res.status(200).json({ status: 200, message: "Login com sucesso" })
     res.redirect('/itens.html')
 });
-=======
-    // res.status(200).json({ status: 200, message: "Login com sucesso" })
-    res.redirect('/itens.html')
-})
+
 
 app.get('/itens.html', (req, res) => {
     res.sendFile(path.join(publicDir, 'itens.html'));
@@ -152,7 +141,6 @@ app.post('/pessoas', (req, res) => {
     pessoas.push(novaPessoa)
     res.status(201).json("Pessoa criada com sucesso!")
 })
->>>>>>> a951ed098a5ae7c3a16481b842588ae8cd01a888
 
 
 app.get('/pessoas', (req, res) => {
@@ -211,6 +199,18 @@ app.put("/pessoas/:id", (req, res) => {
     pessoas.splice(pessoaIndex, 1);
     res.json({ message: "Pessoa deletada com sucesso" });
   });
+
+  app.get('/pessoas/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const pessoa = pessoas.find((p) => p.id === id);
+    if (!pessoa) {
+      return res.status(404).json({ message: "Pessoa não encontrada" });
+    }
+    res.json(pessoa);
+    
+  });
+
+
   
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
